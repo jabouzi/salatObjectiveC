@@ -147,8 +147,8 @@
 // set the angle for calculating Fajr
 - (void) setFajrAngle:(double)angle
 {
-    double *customParams[] = {&angle, NULL, NULL, NULL, NULL};
-    setCustomParams(customParams);
+    NSArray *customParams[] = {&angle, NULL, NULL, NULL, NULL};
+    [self setCustomParams:customParams];
 }
 
 // set the angle for calculating Maghrib
