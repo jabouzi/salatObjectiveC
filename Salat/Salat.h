@@ -77,7 +77,7 @@
 
 }
 
-- (void)getDatePrayerTimes:(int)year :(int)month :(int)day :(double)latitude :(double)longitude :(double)timeZone;
+- (NSMutableArray *)getDatePrayerTimes:(int)year :(int)month :(int)day :(double)latitude :(double)longitude :(double)timeZone;
 
 
 // set the calculation method
@@ -111,7 +111,7 @@
 
 
 // set custom values for calculation parameters
-- (void) setCustomParams:(NSArray*)params;
+- (void) setCustomParams:(double*)params;
 
 
 // set adjusting method for higher latitudes
