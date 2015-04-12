@@ -22,7 +22,7 @@ int main(int argc, const char * argv[]) {
         int highLatitude = 0;
         float latitude = 45.5454;
         float longitude = -73.6391;
-        float timezone = -5;
+        float timezone = -4;
         
         Salat *prayers = [[Salat alloc] init];
         [prayers setCalcMethod:calcMethod];
