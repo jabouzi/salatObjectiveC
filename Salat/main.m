@@ -31,7 +31,7 @@ int main(int argc, const char * argv[]) {
         [prayers setHighLatsMethod:highLatitude];
         
         salaTimes = [prayers getDatePrayerTimes:year:month:day:latitude:longitude:timezone];
-        NSLog(@"Created a %@", salaTimes);
+        NSLog(@"salaTimes a %@", salaTimes);
 
     }
     return 0;

@@ -87,17 +87,6 @@
 - (void) setAsrMethod:(int)methodID;
 
 
-// set the angle for calculating Fajr
-- (void) setFajrAngle:(double)angle;
-
-
-// set the angle for calculating Maghrib
-- (void) setMaghribAngle:(double)angle;
-
-// set the angle for calculating Isha
-- (void) setIshaAngle:(double)angle;
-
-
 // set the minutes after mid-day for calculating Dhuhr
 - (void) setDhuhrMinutes:(int)minutes;
 
@@ -108,10 +97,6 @@
 
 // set the minutes after Maghrib for calculating Isha
 - (void) setIshaMinutes:(int)minutes;
-
-
-// set custom values for calculation parameters
-- (void) setCustomParams:(double*)params;
 
 
 // set adjusting method for higher latitudes

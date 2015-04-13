@@ -129,9 +129,6 @@
     //timeZone = effectiveTimeZone(year, month, day, timeZone);
     JDate = [self julianDate:year:month:day] - longitude / (15 * 24);
     [self computeDayTimes];
-    /*NSLog(@"prayerTimes : %@", prayerTimes);
-    NSLog(@"times : %@", times);
-     NSLog(@"JDate : %f", JDate);*/
 
     return prayerTimes;
 }
@@ -150,26 +147,6 @@
     asrJuristic = methodID;
 }
 
-// set the angle for calculating Fajr
-- (void) setFajrAngle:(double)angle
-{
-    double * customParams[5] = {&angle, NULL, NULL, NULL, NULL};
-    //[self setCustomParams:customParams];
-}
-
-// set the angle for calculating Maghrib
-- (void) setMaghribAngle:(double)angle
-{
-    double *customParams[] = {NULL, 0, &angle, NULL, NULL};
-    //setCustomParams(customParams);
-}
-
-// set the angle for calculating Isha
-- (void) setIshaAngle:(double)angle
-{
-    double *customParams[] = {NULL, NULL, NULL, 0, &angle};
-    //setCustomParams(customParams);
-}
 
 // set the minutes after mid-day for calculating Dhuhr
 - (void) setDhuhrMinutes:(int)minutes
@@ -180,21 +157,13 @@
 // set the minutes after Sunset for calculating Maghrib
 - (void) setMaghribMinutes:(int)minutes
 {
-    double *customParams[] = {NULL, 1, &minutes, NULL, NULL};
-    //[self setCustomParams:customParams];
+    //double *customParams[] = {NULL, 1, &minutes, NULL, NULL};
 }
 
 // set the minutes after Maghrib for calculating Isha
 - (void) setIshaMinutes:(int)minutes
 {
-    double *customParams[] = {NULL, 1, &minutes, NULL, NULL};
-    //[self setCustomParams:customParams];
-}
-
-// set custom values for calculation parameters
-- (void) setCustomParams:(double*)params
-{
-    
+    //double *customParams[] = {NULL, 1, &minutes, NULL, NULL};
 }
 
 // set adjusting method for higher latitudes
@@ -215,11 +184,9 @@
     if ([self isNaN:time])
         return InvalidTime;
     else{
-        NSLog(@"time : %f, time + 0.5 / 60 : %f ",time , time + 0.5 / 60);
         time = [self fixhour:(time + 0.5 / 60)];  // add 0.5 minutes to round
         double hours = floor(time);
         double minutes = floor((time - hours)* 60);
-        NSLog(@"time : %f, hours : %f, minutes : %f ",time , hours, minutes);
         return [NSString stringWithFormat:@"%@%@%@",[self twoDigitsFormat:hours], @":", [self twoDigitsFormat:minutes]];
     }
 }
@@ -245,24 +212,16 @@
 - (double) sunPosition:(double)jd :(int)flag
 {
     double D = jd - 2451545.0;
-    NSLog(@"D : %f, jd : %f ", D, jd);
     double g = [self fixangle:(357.529 + 0.98560028 * D)];
-    NSLog(@"g : %f ", g);
     double q = [self fixangle:(280.459 + 0.98564736 * D)];
-    NSLog(@"q : %f ", q);
     double L = [self fixangle:(q + 1.915 * [self dsin:g] + 0.020 * [self dsin:(2*g)])];
-    NSLog(@"L : %f ", L);
     //double R = 1.00014 - 0.01671* dcos(g) - 0.00014* dcos(2*g);
     double e = 23.439 - 0.00000036* D;
-    NSLog(@"e : %f ", e);
     double d = [self darcsin:([self dsin:e] * [self dsin:L])];
-    NSLog(@"d : %f ", d);
     //double RA = darctan2(dcos(e)* dsin(L), dcos(L))/ 15;
     double RA = [self darctan2:[self dcos:e] * [self dsin:L]:[self dcos:L]] / 15;
-    NSLog(@"RA : %f ", RA);
     RA = [self fixhour:RA];
     double EqT = q/15 - RA;
-    NSLog(@"EqT : %f ", EqT);
     //double * result = new double[2];
     if (flag == 0) return d;
     return EqT;
@@ -285,18 +244,15 @@
 {
     double T = [self equationOfTime:(JDate + t)];
     double Z = [self fixhour:(12 - T)];
-     NSLog(@"T : %f, Z : %f, t : %f", T, Z, t);
     return Z;
 }
                 
 // compute time for a given angle G
 - (double) computeTime:(double)G :(double)t
 {
-    NSLog(@"G : %f t : %f", G, t);
     double D = [self sunDeclination:(JDate + t)];
     double Z = [self computeMidDay:t];
     double V = 1.0/15.0* [self darccos:((-[self dsin:G] -[self dsin:D] * [self dsin:lat]) / ([self dcos:D] * [self dcos:lat]))];
-    NSLog(@"D : %f, Z : %f, V : %f Result : %f", D, Z, V, Z + (G > 90.0 ? -V : V));
     return Z + (G > 90.0 ? -V : V);
 }
                 
@@ -316,7 +272,6 @@
 - (void) computeTimes
 {
     [self dayPortion];
-    NSLog(@"TIMES : %@", times);
     //computeTime(180.0 - methodParams[calcMethod][0], times[0]);
     double Fajr    = [self computeTime:(180.0 - methodParams[calcMethod][0]):[[times objectAtIndex:0] doubleValue]];
     double Sunrise = [self computeTime:(180.0 - 0.833):[[times objectAtIndex:1] doubleValue]];
@@ -326,10 +281,6 @@
     double Maghrib = [self computeTime:methodParams[calcMethod][2]:[[times objectAtIndex:5] doubleValue]];
     double Isha    = [self computeTime:methodParams[calcMethod][4]:[[times objectAtIndex:6] doubleValue]];
     
-    /* _times = [[NSNumber numberWithDouble:Fajr], [NSNumber numberWithDouble:Sunrise],
-     [NSNumber numberWithDouble:Dhuhr], [NSNumber numberWithDouble:Asr],
-     [NSNumber numberWithDouble:Sunset], [NSNumber numberWithDouble:Maghrib],
-     [NSNumber numberWithDouble:Isha], nil];*/
     [times replaceObjectAtIndex:0 withObject:[NSNumber numberWithDouble:Fajr]];
     [times replaceObjectAtIndex:1 withObject:[NSNumber numberWithDouble:Sunrise]];
     [times replaceObjectAtIndex:2 withObject:[NSNumber numberWithDouble:Dhuhr]];
@@ -337,27 +288,11 @@
     [times replaceObjectAtIndex:4 withObject:[NSNumber numberWithDouble:Sunset]];
     [times replaceObjectAtIndex:5 withObject:[NSNumber numberWithDouble:Maghrib]];
     [times replaceObjectAtIndex:6 withObject:[NSNumber numberWithDouble:Isha]];
-    NSLog(@"TIMES : %@", times);
-    /*times[0] = Fajr;
-     times[1] = Sunrise;
-     times[2] = Dhuhr;
-     times[3] = Asr;
-     times[4] = Sunset;
-     times[5] = Maghrib;
-     times[6] = Isha;*/
-
 }
 
 // compute prayer times at given julian date
 - (void) computeDayTimes
 {
-    /*times[0] = 5.0;
-    times[1] = 6.0;
-    times[2] = 12.0;
-    times[3] = 13.0;
-    times[4] = 18.0;
-    times[5] = 18.0;
-    times[6] = 18.0; *///default times
     [times insertObject:[NSNumber numberWithDouble:5.0] atIndex:0];
     [times insertObject:[NSNumber numberWithDouble:6.0] atIndex:1];
     [times insertObject:[NSNumber numberWithDouble:12.0] atIndex:2];
@@ -365,7 +300,6 @@
     [times insertObject:[NSNumber numberWithDouble:18.0] atIndex:4];
     [times insertObject:[NSNumber numberWithDouble:18.0] atIndex:5];
     [times insertObject:[NSNumber numberWithDouble:18.0] atIndex:6];
-    NSLog(@"TIMES : %@", times);
     
     for (int i=1; i<=numIterations; i++)
         [self computeTimes];
@@ -401,7 +335,6 @@
         [times replaceObjectAtIndex:6 withObject:[NSNumber numberWithDouble:temp]];
     }
     
-    NSLog(@"TIMES : %@", times);
     if (adjustHighLats != None) [self adjustHighLatTimes];
 }
  
@@ -413,7 +346,6 @@
             [prayerTimes insertObject:[self floatToTime12:[[times objectAtIndex:i] doubleValue]] atIndex:i];
         else
             [prayerTimes insertObject:[self floatToTime24:[[times objectAtIndex:i] doubleValue]] atIndex:i];
-    NSLog(@"PRAYER TIMES : %@", prayerTimes);
 }
 
 // adjust Fajr, Isha and Maghrib for locations in higher latitudes
@@ -455,7 +387,6 @@
 // convert hours to day portions
 - (void) dayPortion
 {
-    //NSLog(@"Created a %@", times);
     for (int i=0; i<7; i++)
     {
         double temp = [[times objectAtIndex:i] doubleValue];
@@ -582,14 +513,9 @@
 // range reduce hours to 0..23
 - (double) fixhour:(double)a
 {
-    NSLog(@"a : %f", a);
     a = a - 24.0 * (floor(a / 24.0));
-    NSLog(@"a : %f", a);
     a = a < 0 ? a + 24.0 : a;
-    NSLog(@"a : %f", a);
     return a;
 }
-
-
 
 @end
