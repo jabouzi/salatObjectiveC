@@ -15,9 +15,9 @@ int main(int argc, const char * argv[]) {
         NSMutableArray *salaTimes = [[NSMutableArray alloc] init];
         NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
 
-        int year = [components year];;
-        int month = [components month];;
-        int day = [components day];;
+        int year = (int)[components year];;
+        int month = (int)[components month];;
+        int day = (int)[components day];;
         int calcMethod = 2;
         int asrMethod = 0;
         int highLatitude = 0;
