@@ -260,7 +260,7 @@
 - (double) computeAsr:(int)step :(double)t
 {
     double D = [self sunDeclination:(JDate + t)];
-    double G = -[self darccot:(step + [self dtan:(abs(lat-D))])];
+    double G = -[self darccot:(step + [self dtan:(fabs(lat-D))])];
     return [self computeTime:G:t];
 }// Shafii: step=1, Hanafi: step=2
 
@@ -516,6 +516,11 @@
     a = a - 24.0 * (floor(a / 24.0));
     a = a < 0 ? a + 24.0 : a;
     return a;
+}
+
+- (void)showSalats
+{
+
 }
 
 @end
