@@ -13,10 +13,11 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
         NSMutableArray *salaTimes = [[NSMutableArray alloc] init];
-        
-        int year = 2015;
-        int month = 4;
-        int day = 10;
+        NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
+
+        int year = [components year];;
+        int month = [components month];;
+        int day = [components day];;
         int calcMethod = 2;
         int asrMethod = 0;
         int highLatitude = 0;
